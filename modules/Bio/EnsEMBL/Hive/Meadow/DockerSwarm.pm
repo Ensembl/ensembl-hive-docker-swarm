@@ -147,34 +147,61 @@ sub status_of_all_our_workers { # returns an arrayref
 #}
 
 
-#sub submit_workers_return_meadow_pids {
-#    my ($self, $worker_cmd, $required_worker_count, $iteration, $rc_name, $rc_specific_submission_cmd_args, $submit_log_subdir) = @_;
-#
-#    my $worker_cmd_components = [ split_for_bash($worker_cmd) ];
-#
-#    my $job_name = $self->job_array_common_name($rc_name, $iteration);
-#    $ENV{EHIVE_SUBMISSION_NAME} = $job_name;
-#
-#    my @children_pids = ();
-#
-#    warn "Spawning [ ".$self->signature." ] x$required_worker_count \t\t$worker_cmd\n";
-#
-#    foreach my $idx (1..$required_worker_count) {
-#
-#        my $child_pid = Proc::Daemon::Init( {
-#            $submit_log_subdir ? (
-#                child_STDOUT => $submit_log_subdir . "/log_${iteration}_${rc_name}_${idx}_$$.out",
-#                child_STDERR => $submit_log_subdir . "/log_${iteration}_${rc_name}_${idx}_$$.err",
-#            ) : (),     # both STD streams are sent to /dev/null by default
-#            work_dir     => cwd(),
-#            exec_command => [ $worker_cmd_components ],     # the AoA format is supported thanks to the BEGIN hack introduced in the beginning of this module.
-#        } );
-#
-#        push @children_pids, $child_pid;
-#    }
-#
-#    return \@children_pids;
-#}
+sub submit_workers_return_meadow_pids {
+    my ($self, $worker_cmd, $required_worker_count, $iteration, $rc_name, $rc_specific_submission_cmd_args, $submit_log_subdir) = @_;
+
+    my $worker_cmd_components = [ split_for_bash($worker_cmd) ];
+
+    my $job_array_common_name = $self->job_array_common_name($rc_name, $iteration);
+
+    my $service_create_data = {
+        'Name'          => $job_array_common_name,      # NB: service names in DockerSwarm have to be unique!
+        'TaskTemplate'  => {
+            'ContainerSpec' => {
+                'Image'     => 'ensemblorg/ensembl-hive:dswarm',
+                'Args'      => $worker_cmd_components,
+                'Mounts'    => [
+                    {
+                        'Type'      => 'bind',              # FIXME: temporary, a similar mount will be later used for submission logs
+                        'Source'    => '/tmp/leo',
+                        'Target'    => '/tmp/leo',
+                    },
+#                    {                                      # can bind an individual file if necessary:
+#                        'Type'      => 'bind',
+#                        'Source'    => '/tmp/leo/DockerSwarm.pm',
+#                        'Target'    => '/repo/ensembl-hive/modules/Bio/EnsEMBL/Hive/Meadow/DockerSwarm.pm',
+#                    }
+                ],
+                'Env'       => [
+                               "DOCKER_MASTER_ADDR=$ENV{'DOCKER_MASTER_ADDR'}", # propagate it to the workers
+                               "REPORT_DIR=${submit_log_subdir}",               # FIXME: temporary?
+                ],
+            },
+            'Resources'     => {
+                'Reservations'  => {
+                    'NanoCPUs'  => 1000000000,
+                },
+            },
+            'RestartPolicy' => {
+                'Condition' => 'none',
+            },
+        },
+        'Mode'          => {
+            'Replicated'    => {
+                'Replicas'  => int($required_worker_count),
+            },
+        },
+    };
+
+    my $service_created_struct  = $self->POST( '/services/create', $service_create_data );
+#    my $service_id              = $service_created_struct->{'ID'};
+
+    my $service_tasks_list      = $self->GET( '/tasks?filters={"name":["' . $job_array_common_name . '"]}' );
+
+    my @children_task_ids       = map { $_->{'ID'} } @$service_tasks_list;
+
+    return \@children_task_ids;
+}
 
 
 sub run_on_host {   # Overrides Meadow::run_on_host ; not supported yet - it's just a placeholder to block the base class' functionality
