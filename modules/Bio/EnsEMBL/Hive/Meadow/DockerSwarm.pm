@@ -121,6 +121,7 @@ sub status_of_all_our_workers { # returns an arrayref
                             'running'   => 'RUN',
                             'complete'  => 'DONE',
                             'shutdown'  => 'DONE',
+                            'failed'    => 'EXIT',
                         }->{$prestatus} || $prestatus;
 
         push @status_list, [ $task_id, 'docker_user', $status ];
