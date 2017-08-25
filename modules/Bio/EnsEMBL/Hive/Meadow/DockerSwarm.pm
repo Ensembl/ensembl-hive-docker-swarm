@@ -117,11 +117,13 @@ sub status_of_all_our_workers { # returns an arrayref
 
         my $status      = {
                             'pending'   => 'PEND',
-                            'starting'  => 'PEND',
+                            'preparing' => 'RUN',
+                            'starting'  => 'RUN',
                             'running'   => 'RUN',
                             'complete'  => 'DONE',
                             'shutdown'  => 'DONE',
                             'failed'    => 'EXIT',
+                            'rejected'  => 'EXIT',
                         }->{$prestatus} || $prestatus;
 
         push @status_list, [ $task_id, 'docker_user', $status ];
