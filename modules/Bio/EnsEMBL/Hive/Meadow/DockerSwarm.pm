@@ -185,6 +185,7 @@ sub submit_workers_return_meadow_pids {
                 ],
                 'Env'       => [
                                "DOCKER_MASTER_ADDR=$ENV{'DOCKER_MASTER_ADDR'}", # propagate it to the workers
+                               "EHIVE_PASS=$ENV{'EHIVE_PASS'}",                 # -----------,,--------------
                                "REPORT_DIR=${submit_log_subdir}",               # FIXME: temporary?
                 ],
             },
