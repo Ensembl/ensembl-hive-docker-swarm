@@ -44,7 +44,8 @@ our $VERSION = '5.1';       # Semantic version of the Meadow interface:
                             #   change the Minor version whenever the interface is extended, but compatibility is retained.
 
 sub construct_base_url {
-    return 'http://'.$ENV{'DOCKER_MASTER_ADDR'}.'/v1.30';
+    my $dma = $ENV{'DOCKER_MASTER_ADDR'};
+    return $dma && "http://$dma/v1.30";
 }
 
 
