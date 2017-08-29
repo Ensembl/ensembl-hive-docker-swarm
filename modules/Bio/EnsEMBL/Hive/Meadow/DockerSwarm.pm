@@ -75,7 +75,7 @@ sub _get_our_task_attribs {
 
     my $container_prefix    = `hostname`; chomp $container_prefix;
     my $tasks_list          = $self->GET( '/tasks' );
-    my $our_task_attribs    = grep { $_->{'Status'}{'ContainerStatus'}{'ContainerID'} =~ /^${container_prefix}/ } @$tasks_list;
+    my ($our_task_attribs)  = grep { $_->{'Status'}{'ContainerStatus'}{'ContainerID'} =~ /^${container_prefix}/ } @$tasks_list;
 
     return $our_task_attribs;
 }
