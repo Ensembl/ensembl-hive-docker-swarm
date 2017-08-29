@@ -1,0 +1,61 @@
+
+    # start a single-node swarm (and provide the command for others to join) :
+docker swarm init
+
+
+    # check swarm status (says "active")
+docker info | grep Swarm:
+
+
+    # stop the single-node swarm:
+docker swarm leave --force
+
+
+    # check swarm status (says "inactive")
+docker info | grep Swarm:
+
+
+    # ask for the command for others to join:
+docker swarm join-token worker
+
+
+    # joining an existing swarm:
+docker swarm join --token SWMTKN-.... 192.168.65.2:2377
+
+
+    # show the participating nodes:
+docker node ls
+
+
+    # create a service that maps ports:
+docker service create --name blackboard --publish 8306:3306 --env MYSQL_RANDOM_ROOT_PASSWORD=1 --env MYSQL_USER=ensrw --env MYSQL_PASSWORD=ensrw_password --env 'MYSQL_DATABASE=%' mysql/mysql-server:5.5
+
+
+    # create a one-time batch job that is allowed to exit (NOTE Docker host's name in the URL!) :
+docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive init_pipeline.pl Bio::EnsEMBL::Hive::Examples::LongMult::PipeConfig::LongMult_conf -pipeline_url mysql://ensrw:ensrw_password@lg4-ml:8306/lg4_long_mult_inside -hive_force_init 1
+
+
+    # create a "zero-replicas" worker batch job:
+docker service create --name=worker --replicas=0 --restart-condition=none ensemblorg/ensembl-hive runWorker.pl -url mysql://ensrw:ensrw_password@lg4-ml:8306/lg4_long_mult_inside
+
+
+    # rescale the worker service (make sure the number only goes up from the number of currently running replicas) :
+docker service scale worker=2
+
+
+    # guihive_server service:
+docker service create --name=guihive_server --publish 8081:8080 ensemblorg/guihive
+
+
+    # list the existing services with current/max replica numbers :
+docker service ls
+
+
+    # inspect a service:
+docker service inspect --pretty worker
+
+
+    # delete a service:
+docker service rm init_pipeline
+
+
