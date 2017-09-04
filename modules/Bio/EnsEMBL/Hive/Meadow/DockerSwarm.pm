@@ -123,8 +123,12 @@ sub status_of_all_our_workers { # returns an arrayref
         my $task_id     = $task_entry->{'ID'};
         my $prestatus   = lc $task_entry->{'Status'}{'State'};
 
+        # Some statuses are explained at https://docs.docker.com/datacenter/ucp/2.2/guides/admin/monitor-and-troubleshoot/troubleshoot-task-state/
         my $status      = {
+                            'new'       => 'PEND',
                             'pending'   => 'PEND',
+                            'assigned'  => 'PEND',
+                            'accepted'  => 'PEND',
                             'preparing' => 'RUN',
                             'starting'  => 'RUN',
                             'running'   => 'RUN',
@@ -132,6 +136,7 @@ sub status_of_all_our_workers { # returns an arrayref
                             'shutdown'  => 'DONE',
                             'failed'    => 'EXIT',
                             'rejected'  => 'EXIT',
+                            'orphaned'  => 'EXIT',
                         }->{$prestatus} || $prestatus;
 
         push @status_list, [ $task_id, 'docker_user', $status ];
