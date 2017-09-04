@@ -121,7 +121,7 @@ sub status_of_all_our_workers { # returns an arrayref
     foreach my $task_entry (@$service_tasks_struct) {
         my $slot        = $task_entry->{'Slot'};                # an index within the given service
         my $task_id     = $task_entry->{'ID'};
-        my $prestatus   = $task_entry->{'Status'}{'State'};
+        my $prestatus   = lc $task_entry->{'Status'}{'State'};
 
         my $status      = {
                             'pending'   => 'PEND',
