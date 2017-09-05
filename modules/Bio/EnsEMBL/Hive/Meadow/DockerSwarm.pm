@@ -108,7 +108,12 @@ sub get_current_worker_process_id {
 }
 
 
-sub deregister_local_process {}   # Nothing to do
+sub deregister_local_process {
+    my $self = shift @_;
+    # so that the LOCAL child processes don't think they belong to the DockerSwarm meadow
+    $self->{_DOCKER_MASTER_ADDR} = $ENV{'DOCKER_MASTER_ADDR'};
+    delete $ENV{'DOCKER_MASTER_ADDR'};
+}
 
 
 sub status_of_all_our_workers { # returns an arrayref
@@ -189,7 +194,7 @@ sub submit_workers_return_meadow_pids {
                     }
                 ],
                 'Env'       => [
-                               "DOCKER_MASTER_ADDR=$ENV{'DOCKER_MASTER_ADDR'}",                 # propagate it to the workers
+                               "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",             # propagate it to the workers
                                "EHIVE_PASS=$ENV{'EHIVE_PASS'}",                                 # -----------,,--------------
                                $submit_log_subdir ? ("REPORT_DIR=${submit_log_subdir}") : (),   # FIXME: temporary?
                 ],
