@@ -23,7 +23,7 @@ docker swarm join-token worker
 docker swarm join --token SWMTKN-.... 192.168.65.2:2377
 
 
-    # show the participating nodes:
+    # show the participating nodes (only available on manager nodes):
 docker node ls
 
 
