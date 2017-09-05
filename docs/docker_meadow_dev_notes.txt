@@ -24,3 +24,10 @@
 * Container_ids (esp. truncated!) are unique within one Docker Engine,
     but are not guaranteed to be unique across the Swarm
 
+* The merge will not be trivial because experimental/dswarm is mentioned a few times in the code itself, and those references will have to be changed to “master” (for the branch) or “latest” (for the Docker image). Then you need to wait until the image is built, and then perform “docker pull”.
+
+* As I wrote in the notes, there is currently a schema peculiarity that prevented me from submitting the beekeeper itself as one of the containers in the Swarm. Namely, process_id in beekeeper table is required to be INTEGER (and we need VARCHAR for compatibility with Docker Swarm).  I hope it was the only obstacle and can be removed.
+
+* Here are docs about running a Docker Swarm on Amazon Web Services:  https://docs.docker.com/docker-cloud/cloud-swarm/create-cloud-swarm-aws/#create-a-swarm
+
+* And running Docker Swarm on Microsoft Azure:  https://docs.docker.com/docker-cloud/cloud-swarm/create-cloud-swarm-azure/
