@@ -13,6 +13,7 @@ Tips/reminders on running Hive experiments on Docker Swarm:
 
 4. Take note of the last part of that connection command, change the port number from 2377 to 2375 and use this value to set DOCKER_MASTER_ADDR
     in all participating terminal windows - BOTH on master and worker nodes if you are planning to access both (which is a good idea).
+   The master needs to have an extra config option set in /etc/default/docker: "-H tcp://0.0.0.0 -H unix:///var/run/docker.sock" . The first -H enables the IP server on *all* interfaces (if you remove 0.0.0.0 it only listens on localhost, and it won't be visible from the participating nodes). The second -H is to keep the standard UNIX server, needed by the docker CLI interface)
 
 5. Refresh the hive docker image on all participating nodes - BOTH masters and workers:
     docker pull ensemblorg/ensembl-hive:dswarm
