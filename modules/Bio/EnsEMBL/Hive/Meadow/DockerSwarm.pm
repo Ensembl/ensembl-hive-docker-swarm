@@ -177,16 +177,16 @@ sub submit_workers_return_meadow_pids {
                 'Image'     => 'ensemblorg/ensembl-hive:dswarm',
                 'Args'      => $worker_cmd_components,
                 'Mounts'    => [
-                    {
-                        'Type'      => 'bind',              # FIXME: temporary, a similar mount will be later used for submission logs
-                        'Source'    => '/tmp/leo',
-                        'Target'    => '/tmp/leo',
-                    },
-#                    {                                      # can bind an individual file if necessary:
-#                        'Type'      => 'bind',
-#                        'Source'    => '/tmp/leo/DockerSwarm.pm',
-#                        'Target'    => '/repo/ensembl-hive/modules/Bio/EnsEMBL/Hive/Meadow/DockerSwarm.pm',
-#                    }
+                    #{
+                        #'Type'      => 'bind',              # FIXME: temporary, a similar mount will be later used for submission logs
+                        #'Source'    => '/tmp/leo',
+                        #'Target'    => '/tmp/leo',
+                    #},
+                    {                                      # can bind an individual file if necessary:
+                        'Type'      => 'bind',
+                        'Source'    => '/home/matthieu/workspace/src/hive/dswarm/',
+                        'Target'    => '/repo/ensembl-hive/',
+                    }
                 ],
                 'Env'       => [
                                "DOCKER_MASTER_ADDR=$ENV{'DOCKER_MASTER_ADDR'}",                 # propagate it to the workers
