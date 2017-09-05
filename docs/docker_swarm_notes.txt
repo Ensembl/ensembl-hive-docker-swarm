@@ -45,17 +45,13 @@ Tips/reminders on running Hive experiments on Docker Swarm:
 13. When merging experimental/dswarm into master please remember to substitute all mentions of "experimental/dswarm" in the code as well!
     (at least once in Dockerfile and once in DockerSwarm.pm)
 
-14. At the moment we cannot run beekeeper.pl itself in a Docker container, because of a schema constraint:
-    beekeeper.process_id is currently forced to be an INTEGER, whereas worker.process_id is a VARCHAR, which is fine with DockerSwarm.
+14. The way to run beekeeper.pl as a Docker container service is this:
 
-    However when/if the schema change from INTEGER to VARCHAR is made, the way to run beekeeper.pl as a Docker container service is this:
+    docker service create --name long_mult_beekeeper1 --replicas 1 --restart-condition none --env DOCKER_MASTER_ADDR=$DOCKER_MASTER_ADDR --mount type=bind,source=/tmp/leo,destination=/tmp/leo --reserve-cpu 1 ensemblorg/ensembl-hive:dswarm  beekeeper.pl -url $EHIVE_URL -loop
 
-    docker service create --name long_mult_beekeeper1 --replicas 1 --restart-condition none --env DOCKER_MASTER_ADDR=$DOCKER_MASTER_ADDR --mount type=bind,source=/tmp/leo,destination=/tmp/leo --reserve-cpu 1 ensemblorg/ensembl-hive:dswarm  beekeeper.pl -url $EHIVE_URL -run
+    Remember that at least with LongMult example the first analysis has to be run as LOCAL, so the first loop won't submit any containers.
 
-    Remember that at least with LongMult example the first analysis has to be run as LOCAL, and a Dockerized beekeeper doesn't know how to do it.
-    So you can run one iteration manually outside of Docker, and then run the beekeeper service above. If it is run with "-run" option, you'll need
-    to rescale it to 1 every time you want an iteration:
+    If it is run with "-run" option, you'll need to rescale it to 1 every time you want an iteration:
         docker service scale long_mult_beekeeper1=1
     It will go down to 0 after each iteration. This is something I would call "debug mode".
     When everything works, just switch it to "-loop -sleep 0.2" and enjoy.
-    We really have to do something about DockerSwarm's inability to run Local workers though...
