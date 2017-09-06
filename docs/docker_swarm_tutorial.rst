@@ -63,6 +63,10 @@ How to run eHive on a Docker Swarm
 
          docker node ls
 
+   .. note::
+      Docker services can only be created from the *master* node. This
+      affects all the ``docker service create`` commands listed below.
+
 2. Create the pipeline database (blackboard)
 
    a. The easiest is to set up a database server *outside* of the swarm.
