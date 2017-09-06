@@ -62,7 +62,13 @@ sub new {
 sub name {  # also called to check for availability
     my ($self) = @_;
 
-    my $url = (ref($self) ? '' : $self->construct_base_url).'/swarm';   # obtain the Swarm's name whether through the class or an object
+    my $url = '';
+    unless (ref($self)) {
+        # Object instances have defined the base URL in the parent class
+        $url = $self->construct_base_url;
+        return undef unless $url;
+    }
+    $url .= '/swarm';
 
     my $swarm_attribs   = $self->GET( $url ) || {};
 
