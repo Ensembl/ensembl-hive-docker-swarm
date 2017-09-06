@@ -51,6 +51,14 @@ How to run eHive on a Docker Swarm
       ``DOCKER_MASTER_ADDR`` in all the terminals in which you will run
       ``beekeeper.pl`` or the debug script ``dev/docker_jobs.pl``.
 
+      .. note::
+         By default, Docker containers use the Google Public DNS servers
+         8.8.8.8 and 8.8.4.4. If you want to use DNS names to refer to
+         servers (``DOCKER_MASTER_ADDR`` and the MySQL server below) and
+         those are not publicly advertised, you will need to add
+         ``--dns my.dns.ip.address`` parameter(s) to the Docker daemon
+         (``/etc/default/docker`` under Ubuntu)
+
    5. Check that the swarm has all the nodes you want (from the manager node)::
 
          docker node ls
