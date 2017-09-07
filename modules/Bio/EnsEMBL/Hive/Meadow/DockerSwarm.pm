@@ -181,6 +181,18 @@ sub submit_workers_return_meadow_pids {
 
     my $job_array_common_name = $self->job_array_common_name($rc_name, $iteration);
 
+    # Name collision detection
+    my $extra_suffix = 0;
+    my $service_name = $job_array_common_name;
+    while (scalar(@{ $self->GET( '/tasks?filters={"name":["' . $service_name . '"]}' ) })) {
+        $extra_suffix++;
+        $service_name = "$job_array_common_name-$extra_suffix";
+    }
+    if ($extra_suffix) {
+        warn "'$job_array_common_name' already used to name a service. Using '$service_name' instead.\n";
+        $job_array_common_name = $service_name;
+    }
+
     my $service_create_data = {
         'Name'          => $job_array_common_name,      # NB: service names in DockerSwarm have to be unique!
         'TaskTemplate'  => {
