@@ -20,6 +20,13 @@ How to run eHive on a Docker Swarm
 
           docker swarm leave --force
 
+   .. important::
+      These instructions have been fully tested on a swarm composed of
+      Ubuntu 14.04 machines. MacOS machines can be added to the swarm, but
+      with a few restrictions due to the way the network is configured on
+      this OS. For instance, MacOS *cannot* be swarm managers, or host the
+      blackboard.
+
    1. Pick a master node for your swarm and make sure its Docker engine is
       listening on a TCP interface. Under Ubuntu, this is configured in
       ``/etc/default/docker``, by adding this to ``DOCKER_OPTS``::
