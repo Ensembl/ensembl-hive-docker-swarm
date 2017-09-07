@@ -174,10 +174,21 @@ How to run eHive on a Docker Swarm
           long_mult-Hive-default-1_2.1.ekx78eij8veb@mattxps    | container_linux.go:262: starting container process caused "exec: \"/repo/ensembl-hive/scripts/dev/simple_init.py\": stat /repo/ensembl-hive/scripts/dev/simple_init.py: no such file or directory"
           long_mult-Hive-default-1_2.3.nb3pvz5daep4@mattxps    | container_linux.go:262: starting container process caused "exec: \"/repo/ensembl-hive/scripts/dev/simple_init.py\": stat /repo/ensembl-hive/scripts/dev/simple_init.py: no such file or directory"
 
+        $ docker service logs ekx78eij8veb
+          long_mult-Hive-default-1_2.1.ekx78eij8veb@mattxps    | container_linux.go:262: starting container process caused "exec: \"/repo/ensembl-hive/scripts/dev/simple_init.py\": stat /repo/ensembl-hive/scripts/dev/simple_init.py: no such file or directory"
+
+      .. tip::
+         When given a service name, ``docker service logs`` will print the
+         logs of *all* the tasks of that service. When given a task ID (the
+         first column of ``docker service ps``), the output is restricted
+         to that task. This is the only way of getting the output of a
+         specific worker as ``docker service logs`` doesn't accept "task
+         names" (e.g. *long_mult-Hive-default-1_2.2*).
+
       .. note::
-         If/when services fail, you need to know the name of the service
-         to find out what happened (you can't examine an individual
-         worker, only a batch/service)
+         ``docker service logs`` dumps the standard-output logs onto your
+         standard-output and the standard-error logs onto your
+         standard-error.
 
       We also provide a script ``docker_jobs.pl``, located in
       ``ensembl-hive/scripts/dev/`` (which is *not* in the default PATH) to
