@@ -54,6 +54,7 @@ sub new {
 
     my $self    = $class->SUPER::new( $class->construct_base_url );     # First construct a RESTclient extension,
     $self->_init_meadow( @_ );                                          # then top it up with Meadowy things
+    $self->{_DOCKER_MASTER_ADDR} = $ENV{'DOCKER_MASTER_ADDR'};          # saves the location of the manager node
 
     return $self;
 }
@@ -117,7 +118,6 @@ sub get_current_worker_process_id {
 sub deregister_local_process {
     my $self = shift @_;
     # so that the LOCAL child processes don't think they belong to the DockerSwarm meadow
-    $self->{_DOCKER_MASTER_ADDR} = $ENV{'DOCKER_MASTER_ADDR'};
     delete $ENV{'DOCKER_MASTER_ADDR'};
 }
 
