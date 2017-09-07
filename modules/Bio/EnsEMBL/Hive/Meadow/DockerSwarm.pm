@@ -205,11 +205,11 @@ sub submit_workers_return_meadow_pids {
                         #'Source'    => '/tmp/leo',
                         #'Target'    => '/tmp/leo',
                     #},
-                    {                                      # can bind an individual file if necessary:
-                        'Type'      => 'bind',
-                        'Source'    => '/home/matthieu/workspace/src/hive/dswarm/',
-                        'Target'    => '/repo/ensembl-hive/',
-                    }
+                    #{                                      # can bind an individual file if necessary:
+                        #'Type'      => 'bind',
+                        #'Source'    => '/home/matthieu/workspace/src/hive/dswarm/',
+                        #'Target'    => '/repo/ensembl-hive/',
+                    #}
                 ],
                 'Env'       => [
                                "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",             # propagate it to the workers
