@@ -20,6 +20,14 @@ How to run eHive on a Docker Swarm
 
           docker swarm leave --force
 
+   .. attention::
+      On Linux, one of the default network layers needed for the swarm to
+      work (the *ingress* network) overlaps with the `WTGC` wireless
+      network (IP range 10.255.0.0/16 vs 10.255.0.0/21). You will have to
+      either disconnect from WTGC or re-configure the ingress network
+      following the instructions found at
+      https://docs.docker.com/engine/swarm/networking/#customize-the-ingress-network
+
    .. important::
       These instructions have been fully tested on a swarm composed of
       Ubuntu 14.04 machines. MacOS machines can be added to the swarm, but
