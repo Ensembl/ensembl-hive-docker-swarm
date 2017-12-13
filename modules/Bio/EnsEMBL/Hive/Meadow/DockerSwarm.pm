@@ -77,13 +77,6 @@ sub name {  # also called to check for availability
 }
 
 
-sub runWorker_path {    # FIXME: can be made dependent on config options
-    my $self = shift @_;
-
-    return '';  # assume the default Docker image has automatic path set up
-}
-
-
 sub _get_our_task_attribs {
     my ($self) = @_;
 

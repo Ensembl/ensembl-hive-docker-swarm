@@ -12,3 +12,6 @@ RUN  /repo/ensembl-hive/docker/setup_cpan.Ubuntu-16.04.sh /repo/ensembl-hive-doc
 # Expand PERL5LIB
 ENV PERL5LIB "/repo/ensembl-hive-docker-swarm/modules:$PERL5LIB"
 
+# Setup eHive (image name, and installation path)
+COPY hive_config.json /root/.hive_config.json
+

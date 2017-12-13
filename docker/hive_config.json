@@ -1,0 +1,7 @@
+{
+    "Meadow" : {
+        "DockerSwarm" : {
+            "RunWorkerPath"     : "/repo/ensembl-hive/scripts/"
+        }
+    }
+}
