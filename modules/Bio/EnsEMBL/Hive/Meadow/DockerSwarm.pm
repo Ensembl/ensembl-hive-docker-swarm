@@ -36,7 +36,7 @@ use warnings;
 use Cwd ('cwd');
 use Bio::EnsEMBL::Hive::Utils ('split_for_bash');
 
-use base ('Bio::EnsEMBL::Hive::Utils::RESTclient', 'Bio::EnsEMBL::Hive::Meadow');
+use base ('Bio::EnsEMBL::Hive::Meadow', 'Bio::EnsEMBL::Hive::Utils::RESTclient');
 
 
 our $VERSION = '5.1';       # Semantic version of the Meadow interface:
@@ -52,8 +52,8 @@ sub construct_base_url {
 sub new {
     my $class   = shift @_;
 
-    my $self    = $class->SUPER::new( $class->construct_base_url );     # First construct a RESTclient extension,
-    $self->_init_meadow( @_ );                                          # then top it up with Meadowy things
+    my $self    = $class->SUPER::new( @_ );                             # First construct a Meadow
+    $self->base_url( $class->construct_base_url // '' );                # Then initialise the RESTclient extension
     $self->{_DOCKER_MASTER_ADDR} = $ENV{'DOCKER_MASTER_ADDR'};          # saves the location of the manager node
 
     return $self;
