@@ -186,6 +186,8 @@ sub submit_workers_return_meadow_pids {
         $job_array_common_name = $service_name;
     }
 
+    die "The image name for the ".$self->name." DockerSwarm meadow is not configured. Cannot submit jobs !" unless $self->config_get('ImageName');
+
     my $service_create_data = {
         'Name'          => $job_array_common_name,      # NB: service names in DockerSwarm have to be unique!
         'TaskTemplate'  => {
