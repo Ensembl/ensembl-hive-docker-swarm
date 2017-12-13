@@ -1,6 +1,7 @@
 {
     "Meadow" : {
         "DockerSwarm" : {
+            "ImageName"         : "ensemblorg/ensembl-hive-docker-swarm",
             "RunWorkerPath"     : "/repo/ensembl-hive/scripts/"
         }
     }

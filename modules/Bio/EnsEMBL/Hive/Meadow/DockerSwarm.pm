@@ -190,7 +190,7 @@ sub submit_workers_return_meadow_pids {
         'Name'          => $job_array_common_name,      # NB: service names in DockerSwarm have to be unique!
         'TaskTemplate'  => {
             'ContainerSpec' => {
-                'Image'     => 'ensemblorg/ensembl-hive:dswarm',
+                'Image'     => $self->config_get('ImageName'),
                 'Args'      => $worker_cmd_components,
                 'Mounts'    => [
                     #{
