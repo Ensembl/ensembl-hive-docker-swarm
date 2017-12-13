@@ -2,7 +2,14 @@
     "Meadow" : {
         "DockerSwarm" : {
             "ImageName"         : "ensemblorg/ensembl-hive-docker-swarm",
-            "RunWorkerPath"     : "/repo/ensembl-hive/scripts/"
+            "RunWorkerPath"     : "/repo/ensembl-hive/scripts/",
+            "REMARKS:Mounts"    : [
+                {
+                    "Type"      : "bind",
+                    "Source"    : "/tmp/leo",
+                    "Target"    : "/tmp/leo"
+                }
+            ]
         }
     }
 }

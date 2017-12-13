@@ -192,18 +192,7 @@ sub submit_workers_return_meadow_pids {
             'ContainerSpec' => {
                 'Image'     => $self->config_get('ImageName'),
                 'Args'      => $worker_cmd_components,
-                'Mounts'    => [
-                    #{
-                        #'Type'      => 'bind',              # FIXME: temporary, a similar mount will be later used for submission logs
-                        #'Source'    => '/tmp/leo',
-                        #'Target'    => '/tmp/leo',
-                    #},
-                    #{                                      # can bind an individual file if necessary:
-                        #'Type'      => 'bind',
-                        #'Source'    => '/home/matthieu/workspace/src/hive/dswarm/',
-                        #'Target'    => '/repo/ensembl-hive/',
-                    #}
-                ],
+                'Mounts'    => $self->config_get('Mounts'),
                 'Env'       => [
                                "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",             # propagate it to the workers
                                "EHIVE_PASS=$ENV{'EHIVE_PASS'}",                                 # -----------,,--------------
