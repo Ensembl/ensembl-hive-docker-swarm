@@ -119,7 +119,7 @@ How to run eHive on a Docker Swarm
 
       To run as a service, prefix it with::
 
-          docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive:dswarm
+          docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive-docker-swarm
 
 3. Run the pipeline
 
@@ -142,7 +142,7 @@ How to run eHive on a Docker Swarm
 
       2. You can also submit the beeekeeper to the Swarm as a *service*::
 
-            docker service create --name long_mult_beekeeper1 --replicas 1 --restart-condition none --env DOCKER_MASTER_ADDR=$DOCKER_MASTER_ADDR --reserve-cpu 1 ensemblorg/ensembl-hive:dswarm \
+            docker service create --name long_mult_beekeeper1 --replicas 1 --restart-condition none --env DOCKER_MASTER_ADDR=$DOCKER_MASTER_ADDR --reserve-cpu 1 ensemblorg/ensembl-hive-docker-swarm \
               beekeeper.pl -url $EHIVE_URL -loop
 
          For debugging, you may have to share a directory with the
@@ -173,17 +173,17 @@ How to run eHive on a Docker Swarm
    d. Monitor the workers (services) with ``docker service``::
 
         $ docker service ls
-          ID                  NAME                         MODE                REPLICAS            IMAGE                            PORTS
-          quqiykcjmnhk        long_mult-Hive-default-2_1   replicated          0/4                 ensemblorg/ensembl-hive:dswarm
-          t0eundxn55m6        long_mult-Hive-default-1_2   replicated          0/4                 ensemblorg/ensembl-hive:dswarm
-          xi9f3ffbid5e        long_mult-Hive-default-1_3   replicated          0/2                 ensemblorg/ensembl-hive:dswarm
+          ID                  NAME                         MODE                REPLICAS            IMAGE                                 PORTS
+          quqiykcjmnhk        long_mult-Hive-default-2_1   replicated          0/4                 ensemblorg/ensembl-hive-docker-swarm
+          t0eundxn55m6        long_mult-Hive-default-1_2   replicated          0/4                 ensemblorg/ensembl-hive-docker-swarm
+          xi9f3ffbid5e        long_mult-Hive-default-1_3   replicated          0/2                 ensemblorg/ensembl-hive-docker-swarm
 
         $ docker service ps long_mult-Hive-default-1_2
-          ID                  NAME                            IMAGE                            NODE                DESIRED STATE       CURRENT STATE           ERROR                              PORTS
-          ekx78eij8veb        long_mult-Hive-default-1_2.1    ensemblorg/ensembl-hive:dswarm   mattxps             Shutdown            Failed 19 hours ago     "starting container failed: oc…"
-          m13t6brngmwl        long_mult-Hive-default-1_2.2    ensemblorg/ensembl-hive:dswarm   matttop             Shutdown            Complete 19 hours ago
-          nb3pvz5daep4        long_mult-Hive-default-1_2.3    ensemblorg/ensembl-hive:dswarm   mattxps             Shutdown            Failed 19 hours ago     "starting container failed: oc…"
-          j3j4vlm9b4m3        long_mult-Hive-default-1_2.4    ensemblorg/ensembl-hive:dswarm   matttop             Shutdown            Complete 19 hours ago
+          ID                  NAME                            IMAGE                                  NODE                DESIRED STATE       CURRENT STATE           ERROR                              PORTS
+          ekx78eij8veb        long_mult-Hive-default-1_2.1    ensemblorg/ensembl-hive-docker-swarm   mattxps             Shutdown            Failed 19 hours ago     "starting container failed: oc…"
+          m13t6brngmwl        long_mult-Hive-default-1_2.2    ensemblorg/ensembl-hive-docker-swarm   matttop             Shutdown            Complete 19 hours ago
+          nb3pvz5daep4        long_mult-Hive-default-1_2.3    ensemblorg/ensembl-hive-docker-swarm   mattxps             Shutdown            Failed 19 hours ago     "starting container failed: oc…"
+          j3j4vlm9b4m3        long_mult-Hive-default-1_2.4    ensemblorg/ensembl-hive-docker-swarm   matttop             Shutdown            Complete 19 hours ago
 
         $ docker service logs long_mult-Hive-default-1_2
           long_mult-Hive-default-1_2.1.ekx78eij8veb@mattxps    | container_linux.go:262: starting container process caused "exec: \"/repo/ensembl-hive/scripts/dev/simple_init.py\": stat /repo/ensembl-hive/scripts/dev/simple_init.py: no such file or directory"
@@ -236,6 +236,6 @@ How to run eHive on a Docker Swarm
    e. You can submit new workers to the swarm by creating a service that
       would run runWorker.pl::
 
-          docker service create --name=worker --replicas=1 --restart-condition=none ensemblorg/ensembl-hive:dswarm runWorker.pl -url $EHIVE_URL
+          docker service create --name=worker --replicas=1 --restart-condition=none ensemblorg/ensembl-hive-docker-swarm runWorker.pl -url $EHIVE_URL
 
 

@@ -35,13 +35,6 @@ Developer notes about the DockerSwarm Meadow
 * Container_ids (esp. truncated!) are unique within one Docker Engine,
   but are not guaranteed to be unique across the Swarm
 
-* The merge will not be trivial because experimental/dswarm is mentioned a
-  few times in the code itself, and those references will have to be
-  changed to "master" (for the branch) or "latest" (for the Docker image).
-  Then you need to wait until the image is built, and then perform "docker
-  pull".
-
-
 Docker Swarm cheat-sheet
 ========================
 
