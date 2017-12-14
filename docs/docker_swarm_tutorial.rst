@@ -64,7 +64,9 @@ How to run eHive on a Docker Swarm
    4. Take note of the last part of that connection command, change the
       port number from 2377 to 2375 and use this value to set
       ``DOCKER_MASTER_ADDR`` in all the terminals in which you will run
-      ``beekeeper.pl`` or the debug script ``dev/docker_jobs.pl``.
+      ``beekeeper.pl`` or the debug script ``dev/docker_jobs.pl``.::
+
+         export DOCKER_MASTER_ADDR=123.45.67.89:2375
 
       .. note::
          By default, Docker containers use the Google Public DNS servers
