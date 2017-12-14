@@ -1,5 +1,5 @@
-How to run eHive on a Docker Swarm
-==================================
+Tutorial
+========
 
 This document will go through the steps needed to configure a Docker Swarm
 environment, and running a toy eHive pipeline.

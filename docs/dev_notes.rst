@@ -1,6 +1,6 @@
 
-Developer notes about the DockerSwarm Meadow
-============================================
+Developer notes
+===============
 
 *   One way to give the container access to the Engine is via the same REST API
     that is used by the client to talk to the same Docker Engine.
@@ -35,8 +35,8 @@ Developer notes about the DockerSwarm Meadow
 * Container_ids (esp. truncated!) are unique within one Docker Engine,
   but are not guaranteed to be unique across the Swarm
 
-Docker Swarm cheat-sheet
-========================
+Cheat-sheet
+===========
 
 * Start a single-node swarm (and provide the command for others to join)::
 

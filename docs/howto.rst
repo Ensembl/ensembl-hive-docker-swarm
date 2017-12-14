@@ -1,5 +1,5 @@
-How to hive-ify a docker image to run under Docker Swarm
-========================================================
+Packaging instructions
+======================
 
 .. important::
    This document assumes you have already package your own code
