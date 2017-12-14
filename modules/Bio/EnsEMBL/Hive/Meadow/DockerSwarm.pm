@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-    Bio::EnsEMBL::Hive::Meadow::DockerSwarm
+Bio::EnsEMBL::Hive::Meadow::DockerSwarm
 
 =head1 DESCRIPTION
 
