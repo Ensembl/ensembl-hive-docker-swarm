@@ -34,7 +34,7 @@ package Bio::EnsEMBL::Hive::Meadow::DockerSwarm;
 use strict;
 use warnings;
 use Cwd ('cwd');
-use Bio::EnsEMBL::Hive::Utils ('split_for_bash');
+use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash');
 
 use base ('Bio::EnsEMBL::Hive::Meadow', 'Bio::EnsEMBL::Hive::Utils::RESTclient');
 
@@ -188,6 +188,14 @@ sub submit_workers_return_meadow_pids {
 
     die "The image name for the ".$self->name." DockerSwarm meadow is not configured. Cannot submit jobs !" unless $self->config_get('ImageName');
 
+    # If the resource description is missing, use 1 core
+    my $default_resources = {
+        'Reservations'  => {
+            'NanoCPUs'  => 1000000000,
+        },
+    };
+    my $resources = destringify($rc_specific_submission_cmd_args);
+
     my $service_create_data = {
         'Name'          => $job_array_common_name,      # NB: service names in DockerSwarm have to be unique!
         'TaskTemplate'  => {
@@ -201,11 +209,7 @@ sub submit_workers_return_meadow_pids {
                                $submit_log_subdir ? ("REPORT_DIR=${submit_log_subdir}") : (),   # FIXME: temporary?
                 ],
             },
-            'Resources'     => {
-                'Reservations'  => {
-                    'NanoCPUs'  => 1000000000,
-                },
-            },
+            'Resources'     => $resources || $default_resources,
             'RestartPolicy' => {
                 'Condition' => 'none',
             },
