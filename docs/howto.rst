@@ -84,3 +84,6 @@ Comments:
    daemons.  eHive's minimalistic script only ensures that all the
    processes are properly ripped.
 
+That's it ! You're all set to build or push your new image to a hub.
+Then, simply come back to our :ref:`docker-swarm-tutorial`, replacing both
+the image name and the PipeConfig name.

@@ -1,3 +1,6 @@
+
+.. _docker-swarm-tutorial:
+
 Tutorial
 ========
 
