@@ -7,7 +7,6 @@ Packaging instructions
 
 The Dockerfile should essentially be a merge of both ensembl-hive's
 andensembl-hive-docker-swarm's Dockerfiles.
-
 Here is how it may look like::
 
     # NOTE-1

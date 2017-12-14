@@ -117,20 +117,21 @@ environment, and running a toy eHive pipeline.
          be kept upon restart (if the server crashes) or when the service
          ends.
 
-   c. ``init_pipeline.pl`` can run either on the swarm or outside. The base
-      command-line to initialize the long-multiplication pipeline is::
+   c. The ``init_pipeline.pl`` command itself is the same as per usual::
 
           init_pipeline.pl Bio::EnsEMBL::Hive::Examples::LongMult::PipeConfig::LongMult_conf -pipeline_url $EHIVE_URL -hive_force_init 1
 
-      To run as a service, prefix it with::
+      If the pipeline and its dependencies are available on the host
+      machine, you could run the command directly. Otherwise, let's
+      run the Docker image *as a service*::
 
-          docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive-docker-swarm
-
-3. Run the pipeline
+          docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive-docker-swarm init_pipeline.pl (...)
 
    .. tip::
       Docker will automatically pull the latest image before starting the
       containers, you don't need to update the image yourself.
+
+3. Run the pipeline
 
    a. If you are restarting a  pipeline, you may need to delete the
       services created by the previous attempt, as the service names have to
