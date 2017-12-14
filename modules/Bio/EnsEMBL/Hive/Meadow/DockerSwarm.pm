@@ -206,9 +206,14 @@ sub submit_workers_return_meadow_pids {
                 'Env'       => [
                                "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",             # propagate it to the workers
                                "EHIVE_PASS=$ENV{'EHIVE_PASS'}",                                 # -----------,,--------------
-                               $submit_log_subdir ? ("REPORT_DIR=${submit_log_subdir}") : (),   # FIXME: temporary?
                 ],
             },
+            # NOTE: By default, docker alway keeps logs. Should we disable them here
+            #       $submit_log_subdir has been set ? There are no options to redirect
+            #       the logs, so the option's value would be ignored.
+            #'LogDriver' => {
+                #'Name'      => 'none',
+            #},
             'Resources'     => $resources || $default_resources,
             'RestartPolicy' => {
                 'Condition' => 'none',
