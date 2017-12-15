@@ -5,6 +5,29 @@ Packaging instructions
    This document assumes you have already package your own code
    and its dependencies in a docker image, or know how to do it
 
+First of all, you may need to encode the resource-classes of your pipeline
+with the DockerSwarm syntax: by default, the meadow will otherwise request
+just 1 CPU and not constraint the memory.
+
+The resource-class should be a stringified Perl hash. As of the `version
+1.30 of the Docker Engine API
+<https://docs.docker.com/engine/api/v1.30/#operation/ServiceCreate>`__,
+these parameters are accepted:
+
+.. code-block:: perl
+
+    {
+        'Limits'  => {
+            'NanoCPUs'     => 1000000000,       # 1 CPU
+            'MemoryBytes'  => 1073741824,       # 1 GiB
+        },
+        'Reservations'  => {
+            'NanoCPUs'     => 1000000000,       # 1 CPU
+            'MemoryBytes'  => 1073741824,       # 1 GiB
+        },
+    }
+
+Then, it is a matter of packaging the application as a Docker image.
 The Dockerfile should essentially be a merge of both ensembl-hive's
 andensembl-hive-docker-swarm's Dockerfiles.
 Here is how it may look like::
