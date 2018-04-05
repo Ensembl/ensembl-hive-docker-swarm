@@ -48,8 +48,8 @@ Set up a swarm
 
        -H tcp://0.0.0.0 -H unix:///var/run/docker.sock
 
-   The first -H enables the TCP server on *all* network interfaces, the
-   second -H is to keep the engine listening on its standard UNIX socket,
+   The first ``-H`` enables the TCP server on *all* network interfaces, the
+   second ``-H`` is to keep the engine listening on its standard UNIX socket,
    which is needed by the docker CLI interface.
 
    .. note::
