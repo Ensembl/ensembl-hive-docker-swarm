@@ -3,11 +3,11 @@ Packaging instructions
 
 .. important::
    This document assumes you have already package your own code
-   and its dependencies in a docker image, or know how to do it
+   and its dependencies in a Docker image, or know how to do it.
 
 First of all, you may need to encode the resource-classes of your pipeline
 with the DockerSwarm syntax: by default, the meadow will otherwise request
-just 1 CPU and not constraint the memory.
+just one CPU and not constraint the memory.
 
 The resource-class should be a stringified Perl hash. As of the `version
 1.30 of the Docker Engine API
@@ -29,8 +29,8 @@ these parameters are accepted:
 
 Then, it is a matter of packaging the application as a Docker image.
 The Dockerfile should essentially be a merge of both ensembl-hive's
-andensembl-hive-docker-swarm's Dockerfiles.
-Here is how it may look like::
+and ensembl-hive-docker-swarm's Dockerfiles.
+Here's how it might look::
 
     # NOTE-1
     FROM ${BASE_IMAGE_NAME}
@@ -72,11 +72,11 @@ Comments:
    again.
 
 3. Instead of the master branch, you should probably use one of the
-   released, stable, branches (e.g. ``version/2.4``). For reproduciblity,
+   released, stable, branches (e.g. ``version/2.4``). For reproducibility,
    you can also consider using specific commits.
 
 4. eHive comes with a scripts to setup a few OSes (e.g. Ubuntu-16.04,
-   CentOS-7). If your OS is not listed, you will have to write your adapt
+   CentOS-7). If your OS is not listed, write a script to adapt
    these.
 
 5. The configuration file is a JSON file that mostly tells eHive the name
@@ -107,6 +107,6 @@ Comments:
    daemons.  eHive's minimalistic script only ensures that all the
    processes are properly ripped.
 
-That's it ! You're all set to build or push your new image to a hub.
+That's it! You're all set to build or push your new image to a hub.
 Then, simply come back to our :ref:`docker-swarm-tutorial`, replacing both
 the image name and the PipeConfig name.
