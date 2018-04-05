@@ -81,7 +81,7 @@ Comments:
 
 5. The configuration file is a JSON file that mostly tells eHive the name
    of the image it will be running. You can also set up the path to
-   runWorker.pl in case you can't setup $PATH correctly, and define
+   :ref:`runWorker.pl <script-runWorker>` in case you can't setup $PATH correctly, and define
    mount-points that are needed by your application.
 
    .. code-block:: json

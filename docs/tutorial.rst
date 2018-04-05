@@ -71,7 +71,7 @@ Set up a swarm
 4. Take note of the last part of that connection command, change the
    port number from 2377 to 2375 and use this value to set
    ``DOCKER_MASTER_ADDR`` in all the terminals in which you will run
-   ``beekeeper.pl`` or the debug script ``dev/docker_jobs.pl``.::
+   :ref:`beekeeper.pl <script-beekeeper>` or the debug script ``dev/docker_jobs.pl``.::
 
       export DOCKER_MASTER_ADDR=123.45.67.89:2375
 
@@ -122,7 +122,7 @@ Create the pipeline database
       be kept upon restart (if the server crashes) or when the service
       ends.
 
-3. The ``init_pipeline.pl`` command itself is the same as per usual::
+3. The :ref:`init_pipeline.pl <script-init_pipeline>` command itself is the same as per usual::
 
        init_pipeline.pl Bio::EnsEMBL::Hive::Examples::LongMult::PipeConfig::LongMult_conf -pipeline_url $EHIVE_URL -hive_force_init 1
 
@@ -148,7 +148,7 @@ Run the pipeline
 
 2. Beekeeper
 
-   a. You can run ``beekeeper.pl`` on any of the machines participating
+   a. You can run :ref:`beekeeper.pl <script-beekeeper>` on any of the machines participating
       in the Swarm as long as you have set ``DOCKER_MASTER_ADDR``
       variable there: it doesn't have to be the master node!
 
@@ -246,7 +246,7 @@ Run the pipeline
          mwtzqypba2tnrrmfi4lg7wc43       long_mult-Hive-default-1_2[4]   36a7uxdqc0l6m0kxkunp6rjn9       complete        9m8hh96du7220yxtv65a8840q       172.22.68.27/mattxps
 
 5. You can submit new workers to the swarm by creating a service that
-   would run runWorker.pl::
+   would run :ref:`runWorker.pl <script-runWorker>`::
 
        docker service create --name=worker --replicas=1 --restart-condition=none ensemblorg/ensembl-hive-docker-swarm runWorker.pl -url $EHIVE_URL
 
