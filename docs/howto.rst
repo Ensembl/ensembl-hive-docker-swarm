@@ -5,11 +5,11 @@ Packaging instructions
    This document assumes you have already package your own code
    and its dependencies in a Docker image, or know how to do it.
 
-First of all, you may need to encode the resource-classes of your pipeline
+First of all, you may need to encode the Resource Classes of your pipeline
 with the DockerSwarm syntax: by default, the meadow will otherwise request
 just one CPU and not constraint the memory.
 
-The resource-class should be a stringified Perl hash. As of the `version
+The Resource Class should be a stringified Perl hash. As of the `version
 1.30 of the Docker Engine API
 <https://docs.docker.com/engine/api/v1.30/#operation/ServiceCreate>`__,
 these parameters are accepted:
@@ -102,7 +102,7 @@ Comments:
             }
         }
 
-6. An "init" system is required for beekeeper to run "LOCAL" jobs. It is
+6. An "init" system is required for Beekeeper to run "LOCAL" Workers. It is
    also generally required if your application contains services or
    daemons.  eHive's minimalistic script only ensures that all the
    processes are properly ripped.

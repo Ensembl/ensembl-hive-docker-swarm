@@ -7,6 +7,11 @@ Tutorial
 This document will go through the steps needed to configure a Docker Swarm
 environment, and running a toy eHive pipeline.
 
+.. tip::
+   In this document, worker (in lower case) refers to a compute node of the
+   Docker Swarm cluster, whereas Worker (capitalized) refers to the eHive
+   process that runs Jobs.
+
 Set up a swarm
 --------------
 
@@ -166,23 +171,23 @@ Run the pipeline
       since you cannot control on which node the service will be
       executed.
 
-   c. Remember that LOCAL analyses will be run on the beekeeper's
+   c. Remember that LOCAL analyses will be run on the Beekeeper's
       environment, and won't be submitted.
 
-   d. You can also run beekeeper with the ``-run`` option instead of
-      ``-loop``. The beekeeper service will scale down to zero when
-      beekeeper ends and you'll need to rescale it to one every time you
+   d. You can also run the Beekeeper with the ``-run`` option instead of
+      ``-loop``. The Beekeeper service will scale down to zero when
+      the Beekeeper ends and you'll need to rescale it to one every time you
       want another iteration::
 
           docker service scale long_mult_beekeeper1=1
 
-      This can be useful when debugging beekeeper, but when everything
+      This can be useful when debugging the Beekeeper, but when everything
       works, just switch it to ``-loop`` and enjoy.
 
 3. In parallel, open a database connection and watch the pipeline being
    worked on!
 
-4. Monitor the workers (services) with ``docker service``::
+4. Monitor the Workers (services) submitted by the Beekeeper with ``docker service``::
 
      $ docker service ls
        ID                  NAME                         MODE                REPLICAS            IMAGE                                 PORTS
@@ -209,7 +214,7 @@ Run the pipeline
       logs of *all* the tasks of that service. When given a task ID (the
       first column of ``docker service ps``), the output is restricted
       to that task. This is the only way of getting the output of a
-      specific worker as ``docker service logs`` doesn't accept "task
+      specific Worker as ``docker service logs`` doesn't accept "task
       names" (e.g. *long_mult-Hive-default-1_2.2*).
 
    .. note::
@@ -245,7 +250,7 @@ Run the pipeline
          mwtzqypba2tnrrmfi4lg7wc43       long_mult-Hive-default-1_2[3]   mf2oev5kcltklz9hgenas1xc4       complete        hw7a5jd8tx20e51istjp3dp1i       172.22.70.252/matttop
          mwtzqypba2tnrrmfi4lg7wc43       long_mult-Hive-default-1_2[4]   36a7uxdqc0l6m0kxkunp6rjn9       complete        9m8hh96du7220yxtv65a8840q       172.22.68.27/mattxps
 
-5. You can submit new workers to the swarm by creating a service that
+5. You can submit new Workers to the swarm by creating a service that
    would run :ref:`runWorker.pl <script-runWorker>`::
 
        docker service create --name=worker --replicas=1 --restart-condition=none ensemblorg/ensembl-hive-docker-swarm runWorker.pl -url $EHIVE_URL

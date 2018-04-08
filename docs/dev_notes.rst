@@ -78,17 +78,17 @@ Cheat-sheet
     docker service create --name blackboard --publish 8306:3306 --env MYSQL_RANDOM_ROOT_PASSWORD=1 --env MYSQL_USER=ensrw --env MYSQL_PASSWORD=ensrw_password --env 'MYSQL_DATABASE=%' mysql/mysql-server:5.5
 
 
-* Create a one-time batch job that is allowed to exit (NOTE Docker host's name in the URL)::
+* Create a one-time service that is allowed to exit (NOTE Docker host's name in the URL)::
 
     docker service create --name=init_pipeline --restart-condition=none ensemblorg/ensembl-hive init_pipeline.pl Bio::EnsEMBL::Hive::Examples::LongMult::PipeConfig::LongMult_conf -pipeline_url mysql://ensrw:ensrw_password@lg4-ml:8306/lg4_long_mult_inside -hive_force_init 1
 
 
-* Create a "zero-replicas" worker batch job::
+* Create a "zero-replicas" Worker service::
 
     docker service create --name=worker --replicas=0 --restart-condition=none ensemblorg/ensembl-hive runWorker.pl -url mysql://ensrw:ensrw_password@lg4-ml:8306/lg4_long_mult_inside
 
 
-* Rescale the worker service (make sure the number only goes up from the number of currently running replicas)::
+* Rescale the Worker service (make sure the number only goes up from the number of currently running replicas)::
 
     docker service scale worker=2
 
