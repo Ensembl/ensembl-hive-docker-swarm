@@ -20,7 +20,7 @@ Testing the Docker Swarm meadow
 -------------------------------
 
 Find the documentation on ensembl-hive's [user
-manual](http://ensembl-hive.readthedocs.io/en/master/contrib/docker-swarm/tutorial.html)
+manual](http://ensembl-hive.readthedocs.io/en/version-2.5/contrib/docker-swarm/tutorial.html)
 
 Contributors
 ------------

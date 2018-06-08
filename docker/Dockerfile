@@ -4,7 +4,7 @@
 FROM ensemblorg/ensembl-hive
 
 # Clone the repo
-RUN git clone -b master https://github.com/Ensembl/ensembl-hive-docker-swarm.git /repo/ensembl-hive-docker-swarm
+RUN git clone -b version/2.5 https://github.com/Ensembl/ensembl-hive-docker-swarm.git /repo/ensembl-hive-docker-swarm
 
 # Install all the dependencies
 RUN  /repo/ensembl-hive/docker/setup_cpan.Ubuntu-16.04.sh /repo/ensembl-hive-docker-swarm
