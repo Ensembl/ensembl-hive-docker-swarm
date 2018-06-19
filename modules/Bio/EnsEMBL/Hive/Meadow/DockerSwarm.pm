@@ -204,8 +204,9 @@ sub submit_workers_return_meadow_pids {
                 'Args'      => $worker_cmd_components,
                 'Mounts'    => $self->config_get('Mounts'),
                 'Env'       => [
-                               "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",             # propagate it to the workers
-                               "EHIVE_PASS=$ENV{'EHIVE_PASS'}",                                 # -----------,,--------------
+                                # Propagate these to the workers
+                               "DOCKER_MASTER_ADDR=$self->{'_DOCKER_MASTER_ADDR'}",
+                               "_EHIVE_HIDDEN_PASS=$ENV{'_EHIVE_HIDDEN_PASS'}",
                 ],
             },
             # NOTE: By default, docker alway keeps logs. Should we disable them here
