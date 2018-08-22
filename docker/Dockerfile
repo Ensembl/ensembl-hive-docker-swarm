@@ -1,7 +1,7 @@
 # This is a Dockerfile to extend the basic eHive image with the modules to
 # work under Docker Swarm
 
-FROM ensemblorg/ensembl-hive
+FROM ensemblorg/ensembl-hive:2.5
 
 # Clone the repo
 RUN git clone -b version/2.5 https://github.com/Ensembl/ensembl-hive-docker-swarm.git /repo/ensembl-hive-docker-swarm
