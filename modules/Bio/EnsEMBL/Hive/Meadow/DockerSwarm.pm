@@ -80,7 +80,40 @@ sub name {  # also called to check for availability
 sub _get_our_task_attribs {
     my ($self) = @_;
 
-    my $container_prefix    = `hostname`; chomp $container_prefix;
+    # Get the container ID. Although in simple cases, the hostname is the same as
+    # the container ID, it is not always true. So we need to dig into cgroup stuff
+
+# # docker node ls
+# ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+# lcprncbmd0z1523t0ft8ej9uy *   head-node           Ready               Active              Leader              18.09.0
+# ksactwapa4nxaaokcj1xw62pr     worker-1            Ready               Active                                  18.09.0
+# wcms6zxgq0hocoutznggs9r0u     worker-2            Ready               Active                                  18.09.0
+# ior43tdjz9x7n4bzzmr5njvcr     worker-3            Ready               Active                                  18.09.0
+# l6khe63f71z3ntv4abii3n9o1     worker-4            Ready               Active                                  18.09.0
+# nvmy341e4a3sqtt9k3cfdmc7w     worker-5            Ready               Active                                  18.09.0
+# w42pyk5wvoa0qrzbnjhn1yyt7     worker-6            Ready               Active                                  18.09.0
+# 28h1sk9zwkw53bkv4bi95q2f1     worker-7            Ready               Active                                  18.09.0
+# rldg2wm4h19oo9cxxrdbpx5n4     worker-8            Ready               Active                                  18.09.0
+# 72cv6frnei4gjdv3p3l8bmd3c     worker-9            Ready               Active                                  18.09.0
+# u21fny9eapmh09sflk45zzscz     worker-10           Ready               Active                                  18.09.0
+
+# # cat /proc/self/cgroup
+#13:name=systemd:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#12:pids:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#11:hugetlb:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#10:net_prio:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#9:perf_event:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#8:net_cls:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#7:freezer:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#6:devices:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#5:memory:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#4:blkio:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#3:cpuacct:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#2:cpu:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#1:cpuset:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+
+    my $cmd                 = q(cat /proc/self/cgroup | grep docker | sed -e s/\\\\//\\\\n/g | tail -1);
+    my $container_prefix    = `$cmd`; chomp $container_prefix;
     my $tasks_list          = $self->GET( '/tasks' );
     my ($our_task_attribs)  = grep { ($_->{'Status'}{'ContainerStatus'}{'ContainerID'} || '') =~ /^${container_prefix}/ } @$tasks_list;
 
