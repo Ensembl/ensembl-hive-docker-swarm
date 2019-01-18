@@ -116,6 +116,10 @@ sub _get_our_task_attribs {
 
     my $cmd                 = q(cat /proc/self/cgroup | grep docker | sed -e s/\\\\//\\\\n/g | tail -1);
     my $container_prefix    = `$cmd`; chomp $container_prefix;
+
+    # Not running in a container
+    return unless $container_prefix;
+
     my $tasks_list          = $self->GET( '/tasks' );
     my ($our_task_attribs)  = grep { ($_->{'Status'}{'ContainerStatus'}{'ContainerID'} || '') =~ /^${container_prefix}/ } @$tasks_list;
     $self->{_task_attribs}  = $our_task_attribs;
