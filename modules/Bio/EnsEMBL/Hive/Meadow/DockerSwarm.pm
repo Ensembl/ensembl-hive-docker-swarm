@@ -80,6 +80,8 @@ sub name {  # also called to check for availability
 sub _get_our_task_attribs {
     my ($self) = @_;
 
+    return $self->{_task_attribs} if $self->{_task_attribs};
+
     # Get the container ID. Although in simple cases, the hostname is the same as
     # the container ID, it is not always true. So we need to dig into cgroup stuff
 
@@ -116,8 +118,9 @@ sub _get_our_task_attribs {
     my $container_prefix    = `$cmd`; chomp $container_prefix;
     my $tasks_list          = $self->GET( '/tasks' );
     my ($our_task_attribs)  = grep { ($_->{'Status'}{'ContainerStatus'}{'ContainerID'} || '') =~ /^${container_prefix}/ } @$tasks_list;
+    $self->{_task_attribs}  = $our_task_attribs;
 
-    return $our_task_attribs;
+    return $self->{_task_attribs};
 }
 
 
