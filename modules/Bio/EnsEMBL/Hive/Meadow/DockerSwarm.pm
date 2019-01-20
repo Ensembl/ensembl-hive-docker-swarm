@@ -279,6 +279,9 @@ sub submit_workers_return_meadow_pids {
 
     my $service_id              = $service_created_struct->{'ID'};
     my $service_tasks_list      = $self->GET( qq{/tasks?filters={"service":["$service_id"]}} );
+    if (scalar(@$service_tasks_list) != int($required_worker_count)) {
+        die "Submission unsuccessful: found " . scalar(@$service_tasks_list) . " tasks instead of " . int($required_worker_count) . "\n";
+    }
 
     my @children_task_ids       = map { $_->{'ID'} } @$service_tasks_list;
 
