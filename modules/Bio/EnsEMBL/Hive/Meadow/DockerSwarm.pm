@@ -34,7 +34,7 @@ package Bio::EnsEMBL::Hive::Meadow::DockerSwarm;
 use strict;
 use warnings;
 use Cwd ('cwd');
-use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash');
+use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash', 'stringify');
 
 use base ('Bio::EnsEMBL::Hive::Meadow', 'Bio::EnsEMBL::Hive::Utils::RESTclient');
 
@@ -273,6 +273,10 @@ sub submit_workers_return_meadow_pids {
     };
 
     my $service_created_struct  = $self->POST( '/services/create', $service_create_data );
+    unless (exists $service_created_struct->{'ID'}) {
+        die "Submission unsuccessful: " . ($service_created_struct->{'message'} // stringify($service_created_struct)) . "\n";
+    }
+
 #    my $service_id              = $service_created_struct->{'ID'};
 
     my $service_tasks_list      = $self->GET( '/tasks?filters={"name":["' . $job_array_common_name . '"]}' );
