@@ -114,9 +114,14 @@ sub _get_our_task_attribs {
 #2:cpu:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
 #1:cpuset:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
 
-    my $cmd                 = q(cat /proc/self/cgroup | grep docker | sed -e s/\\\\//\\\\n/g | tail -1);
-    my $container_prefix    = `$cmd`; chomp $container_prefix;
-
+    open(my $fh, '<', '/proc/self/cgroup');
+    my $container_prefix;
+    while (<$fh>) {
+        if (m{:/docker/(.*)$}) {
+            $container_prefix = $1;
+            last;
+        }
+    }
     # Not running in a container
     return unless $container_prefix;
 
