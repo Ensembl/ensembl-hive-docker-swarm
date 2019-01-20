@@ -265,7 +265,7 @@ sub submit_workers_return_meadow_pids {
     # If the resource description is missing, use 1 core
     my $default_resources = {
         'Reservations'  => {
-            'NanoCPUs'  => 1000000000,
+            'NanoCPUs'  => 1_000_000_000,
         },
     };
     my $resources = destringify($rc_specific_submission_cmd_args);
