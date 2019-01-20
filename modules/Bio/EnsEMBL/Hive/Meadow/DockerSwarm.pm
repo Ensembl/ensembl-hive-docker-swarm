@@ -211,6 +211,35 @@ sub status_of_all_our_workers { # returns an arrayref
 #    system('kill', '-9', $worker->process_id());
 #}
 
+sub type_resources_as_numeric {
+
+    # In Perl, large numbers would be stringified as strings by stringify
+    # and then JSON. Here we force them to be numeric
+    #
+    # 'Resources' => {
+    #     'Reservations' => {
+    #         'NanoCPUs' => 1000000000,
+    #         'MemoryBytes' => '34359738368'
+    #     },
+    #     'Limits' => {
+    #         'NanoCPUs' => 1000000000,
+    #         'MemoryBytes' => '34359738368'
+    #     }
+    # }
+    #
+
+    my $resources = shift;
+
+    if (exists $resources->{'Reservations'}) {
+        $resources->{'Reservations'}->{'NanoCPUs'}      += 0 if exists $resources->{'Reservations'}->{'NanoCPUs'};
+        $resources->{'Reservations'}->{'MemoryBytes'}   += 0 if exists $resources->{'Reservations'}->{'MemoryBytes'};
+    }
+    if (exists $resources->{'Limits'}) {
+        $resources->{'Limits'}->{'NanoCPUs'}    += 0 if exists $resources->{'Limits'}->{'NanoCPUs'};
+        $resources->{'Limits'}->{'MemoryBytes'} += 0 if exists $resources->{'Limits'}->{'MemoryBytes'};
+    }
+}
+
 
 sub submit_workers_return_meadow_pids {
     my ($self, $worker_cmd, $required_worker_count, $iteration, $rc_name, $rc_specific_submission_cmd_args, $submit_log_subdir) = @_;
@@ -271,6 +300,7 @@ sub submit_workers_return_meadow_pids {
             },
         },
     };
+    type_resources_as_numeric($service_create_data->{'TaskTemplate'}->{'Resources'});
 
     my $service_created_struct  = $self->POST( '/services/create', $service_create_data );
     unless (exists $service_created_struct->{'ID'}) {
