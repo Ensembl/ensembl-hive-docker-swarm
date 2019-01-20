@@ -39,7 +39,7 @@ use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash', 'stringify');
 use base ('Bio::EnsEMBL::Hive::Meadow', 'Bio::EnsEMBL::Hive::Utils::RESTclient');
 
 
-our $VERSION = '5.1';       # Semantic version of the Meadow interface:
+our $VERSION = '5.2';       # Semantic version of the Meadow interface:
                             #   change the Major version whenever an incompatible change is introduced,
                             #   change the Minor version whenever the interface is extended, but compatibility is retained.
 
