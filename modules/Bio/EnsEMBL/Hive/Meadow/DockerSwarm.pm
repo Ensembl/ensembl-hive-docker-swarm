@@ -277,9 +277,8 @@ sub submit_workers_return_meadow_pids {
         die "Submission unsuccessful: " . ($service_created_struct->{'message'} // stringify($service_created_struct)) . "\n";
     }
 
-#    my $service_id              = $service_created_struct->{'ID'};
-
-    my $service_tasks_list      = $self->GET( '/tasks?filters={"name":["' . $job_array_common_name . '"]}' );
+    my $service_id              = $service_created_struct->{'ID'};
+    my $service_tasks_list      = $self->GET( qq{/tasks?filters={"service":["$service_id"]}} );
 
     my @children_task_ids       = map { $_->{'ID'} } @$service_tasks_list;
 
