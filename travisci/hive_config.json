@@ -1,0 +1,8 @@
+{
+    "Meadow" : {
+        "DockerSwarm" : {
+            "ImageName"     : "ensemblorg/ensembl-hive-docker-swarm-for-travis",
+            "RunWorkerPath" : "/repo/ensembl-hive/scripts/"
+        }
+    }
+}

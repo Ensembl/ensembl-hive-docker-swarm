@@ -1,0 +1,32 @@
+language: "perl"
+
+perl:
+  - "5.10"
+
+dist: trusty
+sudo: required
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+    - graphviz
+
+before_install:
+    - git clone --branch master --depth 1 https://github.com/Ensembl/ensembl-hive.git
+    - mysql -u root -h localhost -e 'GRANT ALL PRIVILEGES ON *.* TO "travis"@"%"'
+    - mysql -hlocalhost -utravis -e "SET GLOBAL sql_mode = 'TRADITIONAL'"
+    - mysql --version
+    - env
+
+
+install:
+    - cpanm -v --installdeps --with-recommends --notest --cpanfile ensembl-hive/cpanfile .
+    - docker pull ensemblorg/ensembl-hive-docker-swarm
+    - cp -a modules travisci/
+    - docker build -t ensemblorg/ensembl-hive-docker-swarm-for-travis travisci/
+    - docker swarm init
+
+script: "./travisci/run_tests.sh"
+
