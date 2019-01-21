@@ -35,6 +35,7 @@ install:
     - cp -a modules travisci/
     - docker build -t ensemblorg/ensembl-hive-docker-swarm-for-travis travisci/
     - docker swarm init
+    - cp -p travisci/hive_config.json $HOME/.hive_config.json
 
 script: "./travisci/run_tests.sh"
 

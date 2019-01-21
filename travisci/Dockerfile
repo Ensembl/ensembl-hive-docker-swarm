@@ -8,6 +8,3 @@ FROM ensemblorg/ensembl-hive-docker-swarm
 RUN rm -rf /repo/ensembl-hive-docker-swarm/modules
 COPY modules /repo/ensembl-hive-docker-swarm/modules
 
-# Add the JSON config file
-COPY hive_config.json /root/.hive_config.json
-
