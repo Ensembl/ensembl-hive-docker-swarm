@@ -21,6 +21,11 @@ before_install:
     - mysql -u root -h localhost -e 'GRANT ALL PRIVILEGES ON *.* TO "travis"@"%"'
     - mysql -hlocalhost -utravis -e "SET GLOBAL sql_mode = 'TRADITIONAL'"
     - mysql --version
+    - sudo cat /etc/default/docker
+    - sudo sed -i 's/127.0.0.1/0.0.0.0/' /etc/default/docker
+    - sudo cat /etc/default/docker
+    - sudo service docker restart
+    - sleep 10
     - env
 
 
