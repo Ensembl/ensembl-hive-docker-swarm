@@ -307,6 +307,9 @@ sub submit_workers_return_meadow_pids {
         die "Submission unsuccessful: " . ($service_created_struct->{'message'} // stringify($service_created_struct)) . "\n";
     }
 
+    # Give some time to the Docker daemon to process the request
+    sleep(5);
+
     my $service_id              = $service_created_struct->{'ID'};
     my $service_tasks_list      = $self->GET( qq{/tasks?filters={"service":["$service_id"]}} );
     if (scalar(@$service_tasks_list) != int($required_worker_count)) {
