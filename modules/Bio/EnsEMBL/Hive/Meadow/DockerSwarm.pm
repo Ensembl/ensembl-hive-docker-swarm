@@ -34,12 +34,12 @@ package Bio::EnsEMBL::Hive::Meadow::DockerSwarm;
 use strict;
 use warnings;
 use Cwd ('cwd');
-use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash');
+use Bio::EnsEMBL::Hive::Utils ('destringify', 'split_for_bash', 'stringify');
 
 use base ('Bio::EnsEMBL::Hive::Meadow', 'Bio::EnsEMBL::Hive::Utils::RESTclient');
 
 
-our $VERSION = '5.1';       # Semantic version of the Meadow interface:
+our $VERSION = '5.2';       # Semantic version of the Meadow interface:
                             #   change the Major version whenever an incompatible change is introduced,
                             #   change the Minor version whenever the interface is extended, but compatibility is retained.
 
@@ -80,11 +80,56 @@ sub name {  # also called to check for availability
 sub _get_our_task_attribs {
     my ($self) = @_;
 
-    my $container_prefix    = `hostname`; chomp $container_prefix;
+    return $self->{_task_attribs} if $self->{_task_attribs};
+
+    # Get the container ID. Although in simple cases, the hostname is the same as
+    # the container ID, it is not always true. So we need to dig into cgroup stuff
+
+# # docker node ls
+# ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+# lcprncbmd0z1523t0ft8ej9uy *   head-node           Ready               Active              Leader              18.09.0
+# ksactwapa4nxaaokcj1xw62pr     worker-1            Ready               Active                                  18.09.0
+# wcms6zxgq0hocoutznggs9r0u     worker-2            Ready               Active                                  18.09.0
+# ior43tdjz9x7n4bzzmr5njvcr     worker-3            Ready               Active                                  18.09.0
+# l6khe63f71z3ntv4abii3n9o1     worker-4            Ready               Active                                  18.09.0
+# nvmy341e4a3sqtt9k3cfdmc7w     worker-5            Ready               Active                                  18.09.0
+# w42pyk5wvoa0qrzbnjhn1yyt7     worker-6            Ready               Active                                  18.09.0
+# 28h1sk9zwkw53bkv4bi95q2f1     worker-7            Ready               Active                                  18.09.0
+# rldg2wm4h19oo9cxxrdbpx5n4     worker-8            Ready               Active                                  18.09.0
+# 72cv6frnei4gjdv3p3l8bmd3c     worker-9            Ready               Active                                  18.09.0
+# u21fny9eapmh09sflk45zzscz     worker-10           Ready               Active                                  18.09.0
+
+# # cat /proc/self/cgroup
+#13:name=systemd:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#12:pids:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#11:hugetlb:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#10:net_prio:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#9:perf_event:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#8:net_cls:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#7:freezer:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#6:devices:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#5:memory:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#4:blkio:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#3:cpuacct:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#2:cpu:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+#1:cpuset:/docker/c8ecf8b2f3f2a26543971b57fd37205164a19908871d7bd43405914fcd054bfd
+
+    open(my $fh, '<', '/proc/self/cgroup');
+    my $container_prefix;
+    while (<$fh>) {
+        if (m{:/docker/(.*)$}) {
+            $container_prefix = $1;
+            last;
+        }
+    }
+    # Not running in a container
+    return unless $container_prefix;
+
     my $tasks_list          = $self->GET( '/tasks' );
     my ($our_task_attribs)  = grep { ($_->{'Status'}{'ContainerStatus'}{'ContainerID'} || '') =~ /^${container_prefix}/ } @$tasks_list;
+    $self->{_task_attribs}  = $our_task_attribs;
 
-    return $our_task_attribs;
+    return $self->{_task_attribs};
 }
 
 
@@ -166,6 +211,35 @@ sub status_of_all_our_workers { # returns an arrayref
 #    system('kill', '-9', $worker->process_id());
 #}
 
+sub type_resources_as_numeric {
+
+    # In Perl, large numbers would be stringified as strings by stringify
+    # and then JSON. Here we force them to be numeric
+    #
+    # 'Resources' => {
+    #     'Reservations' => {
+    #         'NanoCPUs' => 1000000000,
+    #         'MemoryBytes' => '34359738368'
+    #     },
+    #     'Limits' => {
+    #         'NanoCPUs' => 1000000000,
+    #         'MemoryBytes' => '34359738368'
+    #     }
+    # }
+    #
+
+    my $resources = shift;
+
+    if (exists $resources->{'Reservations'}) {
+        $resources->{'Reservations'}->{'NanoCPUs'}      += 0 if exists $resources->{'Reservations'}->{'NanoCPUs'};
+        $resources->{'Reservations'}->{'MemoryBytes'}   += 0 if exists $resources->{'Reservations'}->{'MemoryBytes'};
+    }
+    if (exists $resources->{'Limits'}) {
+        $resources->{'Limits'}->{'NanoCPUs'}    += 0 if exists $resources->{'Limits'}->{'NanoCPUs'};
+        $resources->{'Limits'}->{'MemoryBytes'} += 0 if exists $resources->{'Limits'}->{'MemoryBytes'};
+    }
+}
+
 
 sub submit_workers_return_meadow_pids {
     my ($self, $worker_cmd, $required_worker_count, $iteration, $rc_name, $rc_specific_submission_cmd_args, $submit_log_subdir) = @_;
@@ -191,7 +265,7 @@ sub submit_workers_return_meadow_pids {
     # If the resource description is missing, use 1 core
     my $default_resources = {
         'Reservations'  => {
-            'NanoCPUs'  => 1000000000,
+            'NanoCPUs'  => 1_000_000_000,
         },
     };
     my $resources = destringify($rc_specific_submission_cmd_args);
@@ -226,11 +300,21 @@ sub submit_workers_return_meadow_pids {
             },
         },
     };
+    type_resources_as_numeric($service_create_data->{'TaskTemplate'}->{'Resources'});
 
     my $service_created_struct  = $self->POST( '/services/create', $service_create_data );
-#    my $service_id              = $service_created_struct->{'ID'};
+    unless (exists $service_created_struct->{'ID'}) {
+        die "Submission unsuccessful: " . ($service_created_struct->{'message'} // stringify($service_created_struct)) . "\n";
+    }
 
-    my $service_tasks_list      = $self->GET( '/tasks?filters={"name":["' . $job_array_common_name . '"]}' );
+    # Give some time to the Docker daemon to process the request
+    sleep(5);
+
+    my $service_id              = $service_created_struct->{'ID'};
+    my $service_tasks_list      = $self->GET( qq{/tasks?filters={"service":["$service_id"]}} );
+    if (scalar(@$service_tasks_list) != int($required_worker_count)) {
+        die "Submission unsuccessful: found " . scalar(@$service_tasks_list) . " tasks instead of " . int($required_worker_count) . "\n";
+    }
 
     my @children_task_ids       = map { $_->{'ID'} } @$service_tasks_list;
 
