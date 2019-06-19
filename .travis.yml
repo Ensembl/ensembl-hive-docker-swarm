@@ -3,10 +3,10 @@ language: "perl"
 perl:
   - "5.10"
 
-dist: trusty
 sudo: required
 services:
   - docker
+  - mysql
 
 addons:
   apt:
