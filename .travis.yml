@@ -1,12 +1,14 @@
+dist: trusty
+
 language: "perl"
 
 perl:
-  - "5.10"
+  - "5.14"
 
-dist: trusty
 sudo: required
 services:
   - docker
+  - mysql
 
 addons:
   apt:
