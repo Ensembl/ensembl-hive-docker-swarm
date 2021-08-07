@@ -43,8 +43,8 @@ Here's how it might look::
     # NOTE-3
     # Clone the repos
     RUN mkdir /repo \
-        && git clone -b master https://github.com/Ensembl/ensembl-hive.git /repo/ensembl-hive \
-        && git clone -b master https://github.com/Ensembl/ensembl-hive-docker-swarm.git /repo/ensembl-hive-docker-swarm
+        && git clone -b version/2.6 https://github.com/Ensembl/ensembl-hive.git /repo/ensembl-hive \
+        && git clone -b version/2.6 https://github.com/Ensembl/ensembl-hive-docker-swarm.git /repo/ensembl-hive-docker-swarm
 
     # NOTE-4
     # Install all the dependencies
@@ -72,7 +72,7 @@ Comments:
    again.
 
 3. Instead of the master branch, you should probably use one of the
-   released, stable, branches (e.g. ``version/2.4``). For reproducibility,
+   released, stable, branches (e.g. ``version/2.6``). For reproducibility,
    you can also consider using specific commits.
 
 4. eHive comes with a scripts to setup a few OSes (e.g. Ubuntu-16.04,
