@@ -16,7 +16,7 @@ addons:
     - graphviz
 
 before_install:
-    - git clone --branch master --depth 1 https://github.com/Ensembl/ensembl-hive.git
+    - git clone --branch main --depth 1 https://github.com/Ensembl/ensembl-hive.git
     - sudo cp -p travisci/mysql_listen_on_all_interfaces.cnf /etc/mysql/conf.d/
     - sudo service mysql restart
     - sleep 10
