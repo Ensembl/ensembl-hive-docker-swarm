@@ -5,7 +5,8 @@ Docker Swarm Meadow for eHive
 > [!IMPORTANT]  
 > As per eHive version 2.7.0, all the meadows other than `SLURM` and `Local` are deprecated and not supported anymore.
 > This repository should remain in sync with eHive's `version/2.6`, as we do not plan to apply any change to it.
-> `main` branch will instead get out of sync, because of the changes we apply to eHive's.
+> The `main` branch is expected to go out of sync over time as we apply changes to eHive.
+>
 > Please, do not hesitate to contact us, should this be a problem.
 
 [eHive](https://github.com/Ensembl/ensembl-hive) is a system for running computation pipelines on distributed computing resources - clusters, farms or grids.
